@@ -1,0 +1,23 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/shumaila1421/expense-tracker-node#readme",
+  "bugs": {
+    "url": "https://github.com/shumaila1421/expense-tracker-node/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shumaila1421/expense-tracker-node.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}

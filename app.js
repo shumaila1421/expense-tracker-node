@@ -1,8 +1,11 @@
-import http from "http";
+const express = require("express");
+const app = express();
 const port = 5000;
-const server = http.createServer((req, res) => {
-  res.end("Hey this is our server");
+
+app.get("/", (req, res) => {
+  res.send("Hello World!");
 });
-server.listen(port, () => {
-  console.log(`Server is up and listening on ${port}`);
+
+app.listen(port, () => {
+  console.log(`Example app listening on port ${port}`);
 });
