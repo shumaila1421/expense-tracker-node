@@ -4,11 +4,11 @@ const connectDB = require("./db/connect");
 
 const app = express();
 const port = 5000;
-
+app.use(express.json());
 const authRoutes = require("./routes/auth");
 connectDB();
-
-app.use(express.json());
+const expenseRoutes = require("./routes/expense");
+app.use("/api/v1/expenses", expenseRoutes);
 
 app.use("/api/v1/auth", authRoutes);
 app.get("/", (req, res) => {
