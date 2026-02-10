@@ -8,7 +8,9 @@ const {
   deleteExpense,
 } = require("../controllers/expense");
 
+// Protect all routes
 router.use(protect);
+
 router.get("/", getExpenses);
 router.post("/", addExpense);
 router.put("/:id", updateExpense);

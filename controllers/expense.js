@@ -1,19 +1,54 @@
 const Expense = require("../models/expense");
+const mongoose = require("mongoose");
 
-// Get all expenses
+// Get all expenses with optional filters & monthly totals
 exports.getExpenses = async (req, res) => {
   try {
-    const expenses = await Expense.find({ user: req.user.id }).sort({
-      date: -1,
-    });
+    const userId = req.user.id;
+    const { category, startDate, endDate } = req.query;
+
+    // Build filter object
+    let filter = { user: userId };
+
+    if (category) filter.category = category;
+
+    if (startDate || endDate) {
+      filter.date = {};
+      if (startDate) filter.date.$gte = new Date(startDate);
+      if (endDate) filter.date.$lte = new Date(endDate);
+    }
+
+    const expenses = await Expense.find(filter).sort({ date: -1 });
+
+    // Calculate total amount of fetched expenses
+    const totalAmount = expenses.reduce((sum, exp) => sum + exp.amount, 0);
+
+    // Monthly totals for all expenses
+    const monthlyTotals = await Expense.aggregate([
+      { $match: { user: mongoose.Types.ObjectId(userId) } },
+      {
+        $group: {
+          _id: { month: { $month: "$date" }, year: { $year: "$date" } },
+          total: { $sum: "$amount" },
+        },
+      },
+      { $sort: { "_id.year": 1, "_id.month": 1 } },
+    ]);
+
     res.status(200).json({
-      message: "Expenses fetched successfully",
+      message: expenses.length
+        ? "Expenses fetched successfully"
+        : "No expenses found",
       data: expenses,
+      totalAmount,
+      monthlyTotals,
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
+// Add expense
 exports.addExpense = async (req, res) => {
   try {
     const { title, amount, category, date, notes } = req.body;
