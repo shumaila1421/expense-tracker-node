@@ -14,8 +14,6 @@ exports.getExpenses = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-// Add expense
 exports.addExpense = async (req, res) => {
   try {
     const { title, amount, category, date, notes } = req.body;
